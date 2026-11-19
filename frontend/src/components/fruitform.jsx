@@ -1,38 +1,24 @@
-
+cat > components/fruitform.jsx <<'EOF'
 import { useState } from 'react';
 
 export default function Fruitform({ addFruit }) {
-
-  // STATE
   const [newFruit, setNewFruit] = useState("");
 
-  // COMPORTEMENT
-  const handlesubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     if (newFruit.trim() === "") return;
 
-    const newFruitObject = {
-      id: new Date().getTime(),
-      name: newFruit.trim()
-    };
-
-    addFruit(newFruitObject);
+    addFruit({ id: new Date().getTime(), name: newFruit.trim() });
     setNewFruit("");
   };
 
-  const handleChange = (event) => {
-    setNewFruit(event.target.value);
-  };
-
-  // AFFICHAGE
   return (
-    <form onSubmit={handlesubmit}>
+    <form onSubmit={handleSubmit}>
       <input
         value={newFruit}
-        onChange={handleChange}
+        onChange={(e) => setNewFruit(e.target.value)}
         type="text"
-        id="fruitName"
         placeholder="Ajoutez un fruit..."
       />
 
@@ -40,3 +26,4 @@ export default function Fruitform({ addFruit }) {
     </form>
   );
 }
+EOF
