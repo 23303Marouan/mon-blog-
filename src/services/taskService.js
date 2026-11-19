@@ -1,29 +1,60 @@
+
 const API_URL = "http://localhost:3000";
 
 // Récupérer toutes les tâches
 export async function getTasks() {
   const response = await fetch(`${API_URL}/tasks`);
-  return await response.json();
+
+  if (!response.ok) {
+    throw new Error("Erreur lors de la récupération des tâches");
+  }
+
+  return response.json();
 }
 
-export function addTask(tasks, { text, theme }) {
-  const newTask = {
-    id: Date.now().toString(),
-    title: text,
-    theme: theme
-  };
+// Ajouter une tâche
+export async function addTask(title, themeId) {
+  const response = await fetch(`${API_URL}/tasks`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title, themeId }),
+  });
 
-  return [...tasks, newTask];
+  if (!response.ok) {
+    throw new Error("Erreur lors de l'ajout de la tâche");
+  }
+
+  return response.json();
 }
 
-export function deleteTask(tasks, id) {
-  return tasks.filter(task => task.id !== id);
+// Modifier une tâche
+export async function updateTask(id, title, themeId) {
+  const response = await fetch(`${API_URL}/tasks/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title, themeId }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Erreur lors de la modification de la tâche");
+  }
+
+  return response.json();
 }
 
-export function updateTask(tasks, id, { text, theme }) {
-  return tasks.map(task =>
-    task.id === id
-      ? { ...task, title: text, theme: theme }
-      : task
-  );
+// Supprimer une tâche
+export async function deleteTask(id) {
+  const response = await fetch(`${API_URL}/tasks/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Erreur lors de la suppression de la tâche");
+  }
+
+  return response.json();
 }

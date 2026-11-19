@@ -1,13 +1,22 @@
 
-
 import { useState, useEffect } from 'react';
 
 import TaskForm from './components/taskForm';
 import TaskList from './components/taskList';
 import ThemeList from './components/themeList';
 
-import { addTask, deleteTask, updateTask, getTasks } from './services/taskService';
-import { addTheme, deleteTheme } from './services/themeService';
+import {
+  addTask,
+  deleteTask,
+  updateTask,
+  getTasks
+} from './services/taskService';
+
+import {
+  addTheme,
+  deleteTheme,
+  getThemes
+} from './services/themeService';
 
 import './App.css';
 
@@ -16,53 +25,137 @@ function App() {
   const [themes, setThemes] = useState([]);
   const [taskToEdit, setTaskToEdit] = useState(null);
 
+  // Charger les thèmes et les tâches depuis PostgreSQL
   useEffect(() => {
+    async function loadData() {
+      try {
+        const [themesData, tasksData] = await Promise.all([
+          getThemes(),
+          getTasks()
+        ]);
 
-    async function loadTasks() {
-      const data = await getTasks();
-      setTasks(data);
+        setThemes(themesData);
+
+        const formattedTasks = tasksData.map(task => ({
+          ...task,
+          theme: themesData.find(t => t.id === task.themeId)?.title || ""
+        }));
+
+        setTasks(formattedTasks);
+      } catch (error) {
+        console.error("Erreur de chargement :", error);
+      }
     }
 
-    loadTasks();
-  },[]);
+    loadData();
+  }, []);
 
   // false = visiteur / true = administrateur
   const isAdmin = true;
 
-  function handleAdd({ text, theme }) {
-    if (taskToEdit) {
-      setTasks(currentTasks =>
-        updateTask(currentTasks, taskToEdit.id, { text, theme })
+  // Ajouter ou modifier une tâche
+  async function handleAdd({ text, theme }) {
+    try {
+      const themeTitle = theme.trim();
+
+      let themeData = themes.find(
+        t => t.title.toLowerCase() === themeTitle.toLowerCase()
       );
-      setTaskToEdit(null);
-    } else {
-      setTasks(currentTasks => addTask(currentTasks, { text, theme }));
-      handleAddTheme(theme);
+
+      // Créer le thème s'il n'existe pas
+      if (themeTitle && !themeData) {
+        themeData = await addTheme(themeTitle);
+        setThemes(current => [...current, themeData]);
+      }
+
+      const themeId = themeData?.id ?? null;
+
+      if (taskToEdit) {
+        const updatedTask = await updateTask(
+          taskToEdit.id,
+          text,
+          themeId
+        );
+
+        setTasks(current =>
+          current.map(task =>
+            task.id === taskToEdit.id
+              ? { ...updatedTask, theme: themeTitle }
+              : task
+          )
+        );
+
+        setTaskToEdit(null);
+      } else {
+        const newTask = await addTask(text, themeId);
+
+        setTasks(current => [
+          ...current,
+          { ...newTask, theme: themeTitle }
+        ]);
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement :", error);
     }
   }
 
-  function handleDelete(id) {
-    setTasks(currentTasks => deleteTask(currentTasks, id));
+  // Supprimer une tâche
+  async function handleDelete(id) {
+    try {
+      await deleteTask(id);
+      setTasks(current => current.filter(task => task.id !== id));
+    } catch (error) {
+      console.error("Erreur suppression tâche :", error);
+    }
   }
 
-  function handleAddTheme(theme) {
-    setThemes(currentThemes => addTheme(currentThemes, theme));
+  // Supprimer un thème
+  async function handleDeleteTheme(id) {
+    try {
+      await deleteTheme(id);
+      setThemes(current => current.filter(theme => theme.id !== id));
+
+      setTasks(current =>
+        current.map(task =>
+          task.themeId === id
+            ? { ...task, theme: "", themeId: null }
+            : task
+        )
+      );
+    } catch (error) {
+      console.error("Erreur suppression thème :", error);
+    }
   }
 
-  function handleDeleteTheme(id) {
-    setThemes(currentThemes => deleteTheme(currentThemes, id));
-  }
-
+  // Modifier une tâche
   function handleModif(task) {
     setTaskToEdit(task);
   }
 
-  function handleDeleteAll() {
-    setTasks([]);
+  // Supprimer toutes les tâches
+  async function handleDeleteAll() {
+    try {
+      await Promise.all(tasks.map(task => deleteTask(task.id)));
+      setTasks([]);
+    } catch (error) {
+      console.error("Erreur suppression des tâches :", error);
+    }
   }
 
-  function handleDeleteAllThemes() {
-    setThemes([]);
+  // Supprimer tous les thèmes
+  async function handleDeleteAllThemes() {
+    try {
+      for (const theme of themes) {
+        await deleteTheme(theme.id);
+      }
+
+      setThemes([]);
+      setTasks(current =>
+        current.map(task => ({ ...task, theme: "", themeId: null }))
+      );
+    } catch (error) {
+      console.error("Erreur suppression des thèmes :", error);
+    }
   }
 
   return (
