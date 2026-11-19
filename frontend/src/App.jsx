@@ -1,24 +1,27 @@
-cat > App.jsx <<'EOF'
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 
+import Home from './pages/Home';
 import Blog from './pages/Blog';
-import Fruits from './pages/Fruits';
+import Taches from './pages/Taches';
 
 import './App.css';
 
 export default function App() {
   return (
     <BrowserRouter>
-      <nav className="nav">
-        <NavLink to="/" end>Portfolio</NavLink>
-        <NavLink to="/fruits">Fruits</NavLink>
-      </nav>
+      <header className="header">
+        <nav className="nav">
+          <NavLink to="/home">Home</NavLink>
+          <NavLink to="/">Blog</NavLink>
+          <NavLink to="/taches">Taches</NavLink>
+        </nav>
+      </header>
 
       <Routes>
+        <Route path="/home" element={<Home />} />
         <Route path="/" element={<Blog />} />
-        <Route path="/fruits" element={<Fruits />} />
+        <Route path="/taches" element={<Taches />} />
       </Routes>
     </BrowserRouter>
   );
 }
-EOF

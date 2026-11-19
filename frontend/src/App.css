@@ -1,4 +1,3 @@
-
 /* CONTENEUR PRINCIPAL */
 .container {
   max-width: 800px;
@@ -8,7 +7,6 @@
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
-
 
 .task {
   display: flex;
@@ -69,8 +67,9 @@
   cursor: pointer;
   transition: 0.2s;
 }
+
 .save {
-  background:white;
+  background: white;
   color: black;
   border-color: black;
 }
@@ -90,8 +89,8 @@
 }
 
 .modifier {
-  background:white;
-  color:black;
+  background: white;
+  color: black;
 }
 .container button:hover.modifier {
   background: greenyellow;
@@ -106,8 +105,6 @@
   background: rgb(217, 193, 193);
   transform: translateY(-2px);
 }
-
-
 
 /* PARAGRAPHES DES TÂCHES */
 .container p {
@@ -125,6 +122,47 @@
   margin-left: 2px;
 }
 
+/* HEADER */
+.header {
+  max-width: 430px;
+  margin: 20px auto;
+  box-sizing: border-box;
+  background: black;
+  border: 3px solid grey;
+  border-radius: 25px;
+}
+
+/* NAVIGATION ENTRE LES PAGES */
+.nav {
+  display: flex;
+  padding: 4px;
+  gap: 4px;
+}
+
+.nav a {
+  flex: 1;
+  padding: 10px 0;
+  border-spacing: 100px;
+  text-align: center;
+  text-decoration: none;
+  color: grey;
+  font-size: 2rem;
+  font-weight: 500;
+  border-radius: 25px;
+  transition: color 0.3s ease, background 0.3s ease;
+}
+
+.nav a:hover {
+  color: white;
+  background: #333;
+}
+
+/* lien de la page active (classe ajoutée automatiquement par NavLink) */
+.nav a.active {
+  color: white;
+  background: #8b5cf6;
+}
+
 /* RESPONSIVE */
 @media (max-width: 600px) {
   .container {
@@ -139,24 +177,8 @@
   .container h1 {
     font-size: 28px;
   }
-}
 
-/* NAVIGATION ENTRE LES PAGES */
-.nav {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  padding: 20px 0 0;
-}
-
-.nav a {
-  color: #25213b;
-  text-decoration: none;
-  font-weight: 500;
-  padding-bottom: 4px;
-  border-bottom: 2px solid transparent;
-}
-
-.nav a.active {
-  border-bottom-color: #8b5cf6;
+  .header {
+    margin: 15px;
+  }
 }
