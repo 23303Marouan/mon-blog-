@@ -1,16 +1,14 @@
-
 import { useState, useEffect } from 'react';
-import './App.css';
 
-import Fruit from "./Page/liste_fruit/components/fruit.jsx";
-import Fruitform from "./Page/liste_fruit/components/fruitform.jsx";
+import Fruit from '../components/fruit';
+import Fruitform from '../components/fruitform';
 
-import { getThemes, addTheme } from "./services/api.js";
+import { getThemes, addTheme } from '../services/themeService';
 
-export default function App() {
+export default function Fruits() {
 
   // =========================
-  // GESTION DES FRUITS
+  // GESTION DES FRUITS (local, non enregistré en base)
   // =========================
 
   const [fruits, setFruits] = useState([
@@ -27,48 +25,44 @@ export default function App() {
     setFruits([...fruits, newFruitObject]);
   };
 
-
   // =========================
-  // GESTION DES THEMES
+  // GESTION DES THEMES (PostgreSQL)
   // =========================
 
   const [themes, setThemes] = useState([]);
   const [newTheme, setNewTheme] = useState('');
   const [error, setError] = useState('');
 
-  // Récupérer les thèmes depuis PostgreSQL
   useEffect(() => {
     getThemes()
       .then((data) => setThemes(data))
-      .catch((error) => setError(error.message));
+      .catch((err) => setError(err.message));
   }, []);
 
-  // Ajouter un thème dans PostgreSQL
   const handleAddTheme = async (e) => {
     e.preventDefault();
 
     if (!newTheme.trim()) return;
 
     try {
-      const themeCreated = await addTheme(newTheme);
+      const themeCreated = await addTheme(newTheme.trim());
 
       setThemes([...themes, themeCreated]);
       setNewTheme('');
       setError('');
-    } catch (error) {
-      setError(error.message);
+    } catch (err) {
+      setError(err.message);
     }
   };
-
 
   // =========================
   // AFFICHAGE
   // =========================
 
   return (
-    <div>
+    <main className="container">
 
-      <h1>LISTE DE FRUITS</h1>
+      <h1>Liste de fruits</h1>
 
       <ul>
         {fruits.map((fruit) => (
@@ -83,10 +77,9 @@ export default function App() {
 
       <Fruitform addFruit={addFruit} />
 
-
       <hr />
 
-      <h1>MES THEMES</h1>
+      <h1>Mes thèmes</h1>
 
       <form onSubmit={handleAddTheme}>
         <input
@@ -96,28 +89,17 @@ export default function App() {
           onChange={(e) => setNewTheme(e.target.value)}
         />
 
-        <button type="submit">
-          Ajouter un thème
-        </button>
+        <button type="submit">Ajouter un thème</button>
       </form>
 
       {error && <p>{error}</p>}
 
       <ul>
         {themes.map((theme) => (
-          <li key={theme.id}>
-            {theme.title}
-          </li>
+          <li key={theme.id}>{theme.title}</li>
         ))}
       </ul>
 
-    </div>
+    </main>
   );
 }
-
-
-//Gestion d formulaire 
-//1.Création du formulaire
-//2.Soumission du formulaire 
-//3.Colecte des données du formulaire
-//3.A documente 

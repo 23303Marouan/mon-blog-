@@ -1,0 +1,162 @@
+
+/* CONTENEUR PRINCIPAL */
+.container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+.task {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #f7f5ff;
+  border-radius: 8px;
+}
+
+.theme {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.task-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* TITRE */
+.container h1 {
+  text-align: center;
+  color: #25213b;
+  font-size: 36px;
+  margin-bottom: 35px;
+}
+
+/* FORMULAIRE */
+.container form {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 0px;
+}
+
+/* CHAMPS DE SAISIE */
+.container input {
+  flex: 1;
+  padding: 13px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+}
+
+.container input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+}
+
+/* BOUTONS */
+.container button {
+  padding: 11px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.save {
+  background:white;
+  color: black;
+  border-color: black;
+}
+.container button:hover.save {
+  background: beige;
+  transform: translateY(-2px);
+}
+
+.deletTheme {
+  background: white;
+  color: rgb(255, 0, 0);
+}
+.container button:hover.deletTheme {
+  background: rgb(206, 53, 23);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.modifier {
+  background:white;
+  color:black;
+}
+.container button:hover.modifier {
+  background: greenyellow;
+  transform: translateY(-2px);
+}
+
+.viewThemes {
+  background: grey;
+  color: white;
+}
+.container button:hover.viewThemes {
+  background: rgb(217, 193, 193);
+  transform: translateY(-2px);
+}
+
+
+
+/* PARAGRAPHES DES TÂCHES */
+.container p {
+  text-align: left;
+  white-space: pre-wrap;
+  padding: 16px;
+  margin: 10px 0;
+  background: #f7f5ff;
+  border-radius: 8px;
+  color: #333;
+}
+
+/* BOUTONS DANS LES TÂCHES */
+.container p button {
+  margin-left: 2px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .container {
+    margin: 15px;
+    padding: 18px;
+  }
+
+  .container form {
+    flex-direction: column;
+  }
+
+  .container h1 {
+    font-size: 28px;
+  }
+}
+
+/* NAVIGATION ENTRE LES PAGES */
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding: 20px 0 0;
+}
+
+.nav a {
+  color: #25213b;
+  text-decoration: none;
+  font-weight: 500;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a.active {
+  border-bottom-color: #8b5cf6;
+}

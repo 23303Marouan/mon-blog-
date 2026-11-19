@@ -1,5 +1,5 @@
 
-const API_URL = "http://localhost:3000";
+import { API_URL } from "./config";
 
 // Récupérer tous les thèmes
 export async function getThemes() {
@@ -24,6 +24,19 @@ export async function addTheme(title) {
 
   if (!response.ok) {
     throw new Error("Erreur lors de l'ajout du thème");
+  }
+
+  return response.json();
+}
+
+// Supprimer un thème
+export async function deleteTheme(id) {
+  const response = await fetch(`${API_URL}/themes/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Erreur lors de la suppression du thème");
   }
 
   return response.json();
